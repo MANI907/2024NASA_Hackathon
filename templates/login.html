@@ -3,21 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인</title>
+    <title>login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('../static/images/background_select.png'); /* 배경 이미지 */
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container__form {
+            background-color: rgba(43, 43, 42, 0.9); /* 반투명 흰색 배경 */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(162, 45, 45, 0.1);
+            padding: 30px;
+            width: 300px;
+            margin: 0 20; /* 양쪽 여백 추가 */
+        }
+        .form__title {
+            text-align: center;
+            color: #cb3d12;
+        }
+        .input {
+            width:90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #fa9222;
+            border-radius: 10%;
+            color: #e04e21;
+        }
+        * .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #e04e21;
+            color: rgb(23, 19, 19);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn:hover {
+            background-color: #d1e66706;
+        }
+        .link {
+            display: block;
+            text-align: center;
+            margin: 10px 0;
+            color: #4b4444;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-<h2>로그인</h2>
-<form action="/login" method="POST">
-    <label for="username">사용자 이름:</label>
-    <input type="text" id="username" name="username" required><br>
-
-    <label for="password">비밀번호:</label>
-    <input type="password" id="password" name="password" required><br>
-
-    <label for="time">시간 (일):</label>
-    <input type="number" id="time" name="time" required><br>  <!-- 시간 입력 필드 추가 -->
-
-    <button type="submit">로그인</button>
-</form>
+<div class="container">
+    <!-- Sign In -->
+    <div class="container__form container--signin">
+        <form action="/login" method="POST" class="form" id="form2">
+            <h2 class="form__title">Cosmic Respire</h2>
+            <input type="text" placeholder="USER" class="input" id="username" name="username" required>
+            <input type="password" placeholder="PASSWD" class="input" id="password" name="password" required>
+            <input type="number" placeholder="DURATION" class="input" id="time" name="time" required>
+            <button type="submit" class="btn">LOGIN</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

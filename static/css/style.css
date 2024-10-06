@@ -1,0 +1,12 @@
+/* 커스텀 폰트 불러오기 */
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../fonts/PressStart2P.ttf') format('truetype'); /* 폰트 파일 경로 */
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* 기본 폰트 설정 */
+body {
+    font-family: 'MyCustomFont', sans-serif;
+}

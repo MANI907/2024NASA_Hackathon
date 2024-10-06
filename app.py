@@ -20,6 +20,34 @@ model = load_model('./models/my_model.keras')
 game_status = "Coin Mode 실행 중!"
 last_score = 0
 
+
+# 예측 수행
+@app.route('/perform_prediction')
+def perform_prediction():
+    user_data = session.get('user')
+
+    if user_data:
+        time_in_space = user_data['time_in_space']
+        gender = user_data['gender']
+        gravity = user_data['gravity']
+
+        # 입력 데이터를 기반으로 예측에 필요한 데이터 전처리
+        X_space_exp_input = np.exp(-0.00062 * np.array([time_in_space]))
+        input_data = np.column_stack((X_space_exp_input, [gender], [gravity]))
+
+        # 모델을 사용해 예측 수행
+        predictions = model.predict(input_data)
+        predicted_mip = float(predictions[0][0])  # float32를 float으로 변환
+
+        # 예측 결과를 세션에 저장
+        session['predicted_mip'] = predicted_mip
+
+        flash(f'Predicted MIP: {predicted_mip}')
+    else:
+        flash('예측 실패: 사용자 정보를 찾을 수 없습니다.')
+
+    return "로그인 필요", 401
+
 # 메인 페이지 - 로그인 페이지로 리다이렉트
 @app.route('/')
 def home():
@@ -40,7 +68,6 @@ def login_user():
     # 사용자가 존재하는지 확인
     user = users_collection.find_one({"user_id": username})
 
-
     if user:
         # 비밀번호 확인 (단순 텍스트 매칭, 실제로는 해시된 비밀번호 사용 권장)
         if user['password'] == password:
@@ -56,6 +83,9 @@ def login_user():
                 'gender': user['gender'],
                 'gravity': user['gravity']
             }
+            # 예측 수행
+            perform_prediction()
+
             flash('로그인 성공! 우주 체류기간 업데이트 완료! 예측을 수행합니다.')
             return redirect(url_for('mode_select'))  # 로그인 성공 후 대시보드로 이동 (예시)
         else:
@@ -75,31 +105,6 @@ def login_user():
     else:
         return "로그인 실패!", 401
 
-# 예측 수행
-@app.route('/perform_prediction')
-def perform_prediction():
-    user_data = session.get('user')
-
-    if user_data:
-        time_in_space = user_data['time_in_space']
-        gender = user_data['gender']
-        gravity = user_data['gravity']
-
-        # 입력 데이터를 기반으로 예측에 필요한 데이터 전처리
-        X_space_exp_input = np.exp(-0.00062 * np.array([time_in_space]))
-        input_data = np.column_stack((X_space_exp_input, [gender], [gravity]))
-
-        # 모델을 사용해 예측 수행
-        predictions = model.predict(input_data)
-        predicted_mip = predictions[0][0]
-
-        # 예측 결과를 세션에 저장
-        session['predicted_mip'] = predicted_mip
-
-        flash(f'Predicted MIP: {predicted_mip}')
-        return redirect(url_for('mode_select'))
-
-    return "로그인 필요", 401
 # 게임 모드 선택 페이지
 @app.route('/mode_select', methods=['GET'])
 def mode_select():
@@ -119,7 +124,13 @@ def run_modeA():
         # subprocess로 obstacleMode.py 실행 (예측값을 전달 가능)
         subprocess.Popen(['python', 'obstacleMode.py', str(predicted_mip)])
 
-        return redirect(url_for('mode_select'))
+        # 상태 및 점수 세팅 (임의의 초기값, 실제 게임 종료 시 점수 업데이트)
+        session['game_status'] = "OBSTACLE MODE"
+        session['score'] = 0  # 게임 시작 시 기본 점수 0
+
+        # coinMode.html 페이지로 리다이렉트
+        return render_template('coinMode.html', status=session['game_status'], score=session['score'])
+
     else:
         flash('예측값이 필요합니다. 로그인 후 다시 시도해주세요.')
         return redirect(url_for('mode_select'))
@@ -127,8 +138,14 @@ def run_modeA():
 @app.route('/run_modeB', methods=['POST'])
 def run_modeB():
     subprocess.Popen(["python", "coinMode2.py"])
-    return render_template('coinMode.html', status=game_status, score=last_score)
 
+
+    # 상태 및 점수 세팅 (임의의 초기값, 실제 게임 종료 시 점수 업데이트)
+    session['game_status'] = "COIN MODE"
+    session['score'] = 0  # 게임 시작 시 기본 점수 0
+
+    # coinMode.html 페이지로 리다이렉트
+    return render_template('coinMode.html', status=session['game_status'], score=session['score'])
 
 # 점수 저장하는 엔드포인트
 @app.route('/save_score', methods=['POST'])
@@ -147,7 +164,7 @@ def coin_mode_end():
 @app.route('/update_score/<int:score>', methods=['POST'])
 def update_score(score):
     global game_status, last_score
-    game_status = "Coin Mode 종료!"
+    game_status = "??"
     last_score = score
     return jsonify({"message": "Score updated successfully!"})
 

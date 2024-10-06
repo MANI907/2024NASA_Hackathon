@@ -5,8 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>login</title>
     <style>
+        /* 커스텀 폰트 로드 */
+        @font-face {
+            font-family: 'MyCustomFont';
+            src: url('../static/fonts/PressStart2P.ttf') format('truetype'); /* 폰트 파일 경로 */
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* 전체 페이지에 폰트 적용 */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'MyCustomFont', Arial, sans-serif;  /* 커스텀 폰트 적용 */
             background-image: url('../static/images/background_select.png'); /* 배경 이미지 */
             background-size: cover;
             background-position: center;
@@ -29,6 +38,7 @@
         .form__title {
             text-align: center;
             color: #cb3d12;
+            font-family: 'MyCustomFont', Arial, sans-serif;  /* 제목에도 커스텀 폰트 적용 */
         }
         .input {
             width:90%;
@@ -37,6 +47,7 @@
             border: 2px solid #fa9222;
             border-radius: 10%;
             color: #e04e21;
+            font-family: 'MyCustomFont', Arial, sans-serif;  /* 입력란에도 커스텀 폰트 적용 */
         }
         * .btn {
             width: 100%;
@@ -47,6 +58,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
+            font-family: 'MyCustomFont', Arial, sans-serif;  /* 버튼에도 커스텀 폰트 적용 */
         }
         .btn:hover {
             background-color: #d1e66706;
@@ -57,6 +69,7 @@
             margin: 10px 0;
             color: #4b4444;
             text-decoration: none;
+            font-family: 'MyCustomFont', Arial, sans-serif;  /* 링크에도 커스텀 폰트 적용 */
         }
     </style>
 </head>
@@ -65,7 +78,7 @@
     <!-- Sign In -->
     <div class="container__form container--signin">
         <form action="/login" method="POST" class="form" id="form2">
-            <h2 class="form__title">Cosmic Respire</h2>
+            <h2 class="form__title">COSMIC RESPIRE</h2>
             <input type="text" placeholder="USER" class="input" id="username" name="username" required>
             <input type="password" placeholder="PASSWD" class="input" id="password" name="password" required>
             <input type="number" placeholder="DURATION" class="input" id="time" name="time" required>

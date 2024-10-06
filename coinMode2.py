@@ -87,8 +87,8 @@ def moveCoins(coin_rects, speed):
             coin_rect.y = random.randint(50, SCREEN_HEIGHT - 50)
         SCREEN.blit(coin_image, coin_rect)
 
-# 게임 실행 시간 설정 (10초)
-GAME_DURATION = 15000  # 15,000 milliseconds = 15 seconds
+# 게임 실행 시간 설정 (60초)
+GAME_DURATION = 60000  # 15,000 milliseconds = 15 seconds
 
 def restart():
     global score, isGameOver, rectCoin
@@ -217,7 +217,8 @@ def save_score_to_mongodb(score, time_in_seconds):
     score_data = {
         'score': score,
         'time_in_seconds': time_in_seconds,
-        'game_end_time': current_time  # 게임 종료 시각 저장
+        'game_end_time': current_time, # 게임 종료 시각 저장
+        'mode': 'c'
     }
     scores_collection.insert_one(score_data)
 

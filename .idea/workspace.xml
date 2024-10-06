@@ -5,13 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e7932e74-2b94-4041-8309-25aa41fa046e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/static/fonts/PressStart2P.ttf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obstacle.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/coinMode2.py" beforeDir="false" afterPath="$PROJECT_DIR$/coinMode2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obstacleMode.py" beforeDir="false" afterPath="$PROJECT_DIR$/obstacleMode.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/background_select.png" beforeDir="false" afterPath="$PROJECT_DIR$/static/images/background_select.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/coinMode.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/coinMode.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
     </list>
@@ -242,7 +239,7 @@
       <workItem from="1728108693405" duration="15765000" />
       <workItem from="1728146370583" duration="20007000" />
       <workItem from="1728187069538" duration="13628000" />
-      <workItem from="1728201559878" duration="4835000" />
+      <workItem from="1728201559878" duration="11630000" />
     </task>
     <servers />
   </component>

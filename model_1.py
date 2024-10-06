@@ -7,10 +7,10 @@ import numpy as np
 # 1. 데이터 준비
 
 # 경로 설정 (데이터 파일 경로에 맞게 수정 필요)
-gravity_data_path = r'C:\Users\USER\Downloads\male_gravity_data.csv'
-female_gravity_data_path = r'C:\Users\USER\Downloads\female_gravity_data.csv'
-male_zero_gravity_data_path = r'C:\Users\USER\Downloads\male_zero_gravity_data.csv'
-female_zero_gravity_data_path = r'C:\Users\USER\Downloads\female_zero_gravity_data.csv'
+gravity_data_path = r'C:\Users\sjeon\Downloads\male_gravity_data.csv'
+female_gravity_data_path = r'C:\Users\sjeon\Downloads\female_gravity_data.csv'
+male_zero_gravity_data_path = r'C:\Users\sjeon\Downloads\male_zero_gravity_data.csv'
+female_zero_gravity_data_path = r'C:\Users\sjeon\Downloads\female_zero_gravity_data.csv'
 
 # CSV 파일 불러오기
 male_gravity_data = pd.read_csv(gravity_data_path)
@@ -136,12 +136,16 @@ predictions = model.predict(new_input_data)
 print("Predicted MIP values:", predictions)
 
 # 딥러닝 모델 저장
-model.save('mip_prediction_model.h5')
+model.save('my_model.keras')
+
 
 from tensorflow.keras.models import load_model
 
 # 모델 불러오기
-model = load_model('mip_prediction_model.h5')
+model = load_model('my_model.keras')
+# 모델 컴파일 시 수정
+model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=['mean_absolute_error'])
+
 
 # 새로운 데이터를 기반으로 예측
 predictions = model.predict(new_input_data)
@@ -163,6 +167,7 @@ input_data = np.column_stack((X_space_exp_input, gender_values, gravity_values))
 
 
 
+
 from flask import Flask, request, jsonify
 from tensorflow.keras.models import load_model
 import numpy as np
@@ -171,7 +176,7 @@ import numpy as np
 app = Flask(__name__)
 
 # 모델 불러오기
-model = load_model('mip_prediction_model.h5')
+model = load_model('my_model.keras')
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -188,3 +193,140 @@ def predict():
 # 서버 실행
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+import pygame
+import random
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.models import load_model
+
+# Pygame 초기화
+pygame.init()
+
+# 화면 설정
+WIDTH, HEIGHT = 800, 600
+SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("호흡 기반 우주 게임")
+
+# FPS 설정
+clock = pygame.time.Clock()
+
+# 색상 설정
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+
+# 캐릭터 이미지 로드
+astronaut_img = pygame.image.load('player.jpg')
+astronaut_rect = astronaut_img.get_rect()
+astronaut_rect.x = 50
+astronaut_rect.y = HEIGHT // 2  # 초기 위치는 화면 중앙
+
+# 장애물 리스트
+obstacles = []
+
+# 딥러닝 모델 로드
+model = load_model(r'C:\Users\sjeon\Downloads\my_model.keras')
+# 실시간 호흡 데이터를 받아서 예측하는 함수
+def predict_mip_mep(input_data):
+    predictions = model.predict(input_data)
+    mip = predictions[0][0]  # MIP 예측값
+    mep = predictions[0][1]  # MEP 예측값
+    return mip, mep
+
+# 가상의 호흡 데이터를 수집하는 함수 (실제 호흡 센서와 연결 시 교체)
+def collect_breath_data():
+    mip = np.random.uniform(90, 110)  # MIP 데이터 (가상)
+    mep = np.random.uniform(80, 100)  # MEP 데이터 (가상)
+    return np.array([[mip, mep]])
+class Player:
+    def __init__(self):
+        self.y_position = HEIGHT // 2  # 캐릭터의 초기 위치 (수직 위치)
+        self.is_inhaling = False  # 초기 상태는 호기 (내쉬는 상태)
+
+    def update_position(self):
+        keys = pygame.key.get_pressed()
+
+        # 위/아래 화살표로 캐릭터 이동
+        if keys[pygame.K_UP] and self.is_inhaling:  # 흡기 중일 때 위로 이동
+            astronaut_rect.y -= 5
+        elif keys[pygame.K_DOWN] and not self.is_inhaling:  # 호기 중일 때 아래로 이동
+            astronaut_rect.y += 5
+
+        # 화면 경계 밖으로 나가지 않도록 설정
+        astronaut_rect.y = max(0, min(HEIGHT - astronaut_rect.height, astronaut_rect.y))
+
+class Obstacle:
+    def __init__(self, direction):
+        self.rect = pygame.Rect(WIDTH, random.randint(50, HEIGHT - 50), 50, 50)
+        self.direction = direction  # 위로 또는 아래로 이동
+
+    def move(self):
+        if self.direction == 'up':
+            self.rect.x -= 10  # 오른쪽에서 왼쪽으로 이동
+        else:
+            self.rect.x -= 10
+
+    def draw(self):
+        pygame.draw.rect(SCREEN, RED, self.rect)
+
+# 장애물 생성 함수
+def create_obstacle():
+    direction = 'up' if random.choice([True, False]) else 'down'
+    obstacle = Obstacle(direction)
+    obstacles.append(obstacle)
+
+# 장애물 이동 및 제거
+def move_obstacles():
+    for obstacle in obstacles[:]:
+        obstacle.move()
+        if obstacle.rect.x < -50:
+            obstacles.remove(obstacle)
+
+    # 장애물 그리기
+    for obstacle in obstacles:
+        obstacle.draw()
+# 게임 루프
+def game_loop():
+    player = Player()
+    last_obstacle_time = 0  # 마지막 장애물 생성 시간
+    isActive = True
+
+    while isActive:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                isActive = False
+
+            # 오른쪽 버튼으로 흡기/호기 상태 전환
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
+                player.is_inhaling = not player.is_inhaling  # 상태 전환
+
+        # 실시간 호흡 데이터 받아서 처리 (예: 딥러닝 예측)
+        breath_data = collect_breath_data()
+        mip, mep = predict_mip_mep(breath_data)
+
+        # 캐릭터 위치 업데이트
+        player.update_position()
+
+        # 장애물 생성 (일정 시간 간격으로)
+        current_time = pygame.time.get_ticks()
+        if current_time - last_obstacle_time > 2000:
+            create_obstacle()
+            last_obstacle_time = current_time
+
+        # 장애물 이동 및 충돌 체크
+        move_obstacles()
+
+        # 화면 업데이트
+        SCREEN.fill(BLACK)  # 배경을 검정색으로
+        SCREEN.blit(astronaut_img, astronaut_rect)  # 캐릭터 그리기
+        pygame.display.flip()
+        clock.tick(60)
+
+    pygame.quit()
+
+# 게임 실행
+game_loop()

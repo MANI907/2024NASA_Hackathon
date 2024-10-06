@@ -9,8 +9,6 @@ This project aims to make an enjoyable game for astronauts facing profound physi
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Installation](#installation)
-- [Usage](#usage)
-- [License](#license)
 
 
 ## Features

@@ -6,11 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="e7932e74-2b94-4041-8309-25aa41fa046e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coinMode2.py" beforeDir="false" afterPath="$PROJECT_DIR$/coinMode2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obstacleMode.py" beforeDir="false" afterPath="$PROJECT_DIR$/obstacleMode.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/images/background_select.png" beforeDir="false" afterPath="$PROJECT_DIR$/static/images/background_select.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/coinMode.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/coinMode.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_scores.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_1.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/player_data.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/player_rocket.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/star.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_data.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -239,7 +241,7 @@
       <workItem from="1728108693405" duration="15765000" />
       <workItem from="1728146370583" duration="20007000" />
       <workItem from="1728187069538" duration="13628000" />
-      <workItem from="1728201559878" duration="11630000" />
+      <workItem from="1728201559878" duration="12934000" />
     </task>
     <servers />
   </component>

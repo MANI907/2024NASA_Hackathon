@@ -7,9 +7,16 @@
 </head>
 <body>
 <h2>모드 선택</h2>
-<p>예측된 MIP 값: {{ mip_value }}</p>
 
-<a href="/mode_a"><button>A 모드 선택</button></a>
-<a href="/mode_b"><button>B 모드 선택</button></a>
+<!-- A 모드 선택 (POST 요청) -->
+<form action="/run_modeA" method="POST" style="display:inline;">
+  <button type="submit">OBSTACLE MODE</button>
+</form>
+
+<!-- B 모드 선택 (POST 요청) -->
+<form action="/run_modeB" method="POST" style="display:inline;">
+  <button type="submit">COIN MODE</button>
+</form>
+
 </body>
 </html>

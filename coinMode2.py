@@ -1,7 +1,9 @@
+import csv
 import requests
 import threading
 import pygame
 from pygame.rect import *
+from pymongo import MongoClient
 import random
 
 # 초기 coin_data 및 density에 따른 코인 개수 설정 함수
@@ -89,7 +91,7 @@ def moveCoins(coin_rects, speed):
         SCREEN.blit(coin_image, coin_rect)
 
 # 게임 시간이 1분(60초)으로 설정 (밀리초 단위)
-GAME_DURATION = 60000  # 60,000 milliseconds = 1 minute
+GAME_DURATION = 10000  # 60,000 milliseconds = 1 minute
 
 # 실시간 데이터를 동전 좌표로 변환하는 함수
 def update_coin_positions(coin_rects, data):
@@ -255,6 +257,31 @@ def moveCoins(coin_rects, speed):
             coin_rect.x = SCREEN_WIDTH + random.randint(50, 200)
             coin_rect.y = random.randint(50, SCREEN_HEIGHT - 50)
         SCREEN.blit(coin_image, coin_rect)
+def save_score_to_csv(score, time_in_seconds):
+    with open('game_scores.csv', mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([score, time_in_seconds])
+
+def save_score_to_mongodb(score, time_in_seconds):
+    client = MongoClient('mongodb://localhost:27017/')
+    db = client['game_db']
+    scores_collection = db['scores']
+
+    score_data = {
+        'score': score,
+        'time_in_seconds': time_in_seconds
+    }
+    scores_collection.insert_one(score_data)
+
+def send_score_to_server(score):
+    try:
+        response = requests.post('http://127.0.0.1:5000/save_score', json={'score': score})
+        if response.status_code == 200:
+            print("Score sent successfully!")
+        else:
+            print("Failed to send score:", response.status_code)
+    except Exception as e:
+        print(f"Error while sending score: {e}")
 
 ## time
 clock = pygame.time.Clock()
@@ -283,6 +310,14 @@ while isActive:
     if time_left <= 0:
         isGameOver = True
         time_left = 0  # 시간이 음수로 내려가는 것을 방지
+        # 게임 시간 계산
+        time_in_seconds = (pygame.time.get_ticks() - start_time) // 1000
+
+        # 파일에 저장하는 경우
+        save_score_to_csv(score, time_in_seconds)
+
+        # MongoDB에 저장하는 경우
+        save_score_to_mongodb(score, time_in_seconds)
 
     # 점수 및 남은 시간 텍스트 표시
     setText(isGameOver, time_left)
@@ -293,3 +328,10 @@ while isActive:
     pygame.display.flip()
     clock.tick(60)
 
+# 게임이 종료되었을 때 호출
+if isGameOver:
+    time_in_seconds = (pygame.time.get_ticks() - start_time) // 1000
+    send_score_to_server(score)  # 서버로 점수 전송
+
+    pygame.quit()  # 게임 창 종료
+    quit()  # 프로그램 완전히 종료
